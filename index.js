@@ -1,45 +1,55 @@
 const express = require('express');
-const db = require('./db.js')
+const dbFactory = require('./db-factory.js')
+const cors = require('cors')
 const bodyParser = require('body-parser');
 
 const app = express();
 
+app.use(cors({
+  origin: '*'
+}))
 app.use(bodyParser.urlencoded())
+app.use(bodyParser.json())
 
-const userDB  = db.createUserDB()
+const userDB  = dbFactory.createUserDB()
 
-app.set('view engine', 'ejs');
+app.get('/users', function (request, response) {
+  response.json({
+    users: userDB.getUsers()
+  })
+});
 
-app.get('/', function (request, response) {
-    response.render('index', {
-      users: userDB.getUsers()
+
+app.post('/users', function (request, response) {
+  const name = request.body.name
+
+  if (!name) {
+    return response.status(422).json({
+      message: '`name` field is required'
     })
-});
+  }
+  const user = {
+    id: Math.random().toString(),
+    name: name
+  }
+    
+  userDB.addUser(user)
 
-app.get('/tambah', function (request, response) {
-    response.render('add')
-});
-
-app.post('/tambah', function (request, response) {
-    const name = request.body.name;
-    const user = {
-        id: Math.random().toString(),
-        name: name
-    }
-    console.log(user)
-     userDB.addUser(user)
-
-    response.redirect('/')
+  response.json({
+     user: user
+  })
 })
 
 app.delete('/users/:id', function (request, response) {
-    const userId = request.params.id
+  const userId = request.params.id
 
-    userDB.removeUser(userId)
+  userDB.removeUser(userId)
 
-    response.json({
-       'message': "Berhasil hapus"
-    })
+  response.json({
+    message: 'User been deleted'
+  })
 })
 
-app.listen(4000)
+app.listen(4000, () => {
+  console.log('Server running on port')
+})
