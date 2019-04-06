@@ -15,7 +15,7 @@ const userDB  = dbFactory.createUserDB()
 
 app.get('/users', function (request, response) {
   response.json({
-    users: userDB.getUsers()
+    users: userDB.all()
   })
 });
 
@@ -33,7 +33,7 @@ app.post('/users', function (request, response) {
     name: name
   }
     
-  userDB.addUser(user)
+  userDB.add(user)
 
   response.json({
      user: user
@@ -43,7 +43,7 @@ app.post('/users', function (request, response) {
 app.delete('/users/:id', function (request, response) {
   const userId = request.params.id
 
-  userDB.removeUser(userId)
+  userDB.remove(userId)
 
   response.json({
     message: 'User been deleted'
@@ -51,5 +51,5 @@ app.delete('/users/:id', function (request, response) {
 })
 
 app.listen(4000, () => {
-  console.log('Server running on port')
+  console.log('Server running on port 4000')
 })

@@ -1,0 +1,16 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "superstatic": "^6.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "superstatic"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
